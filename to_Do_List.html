@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body onload="load_task()">
+  <h1>List to do</h1>
+  <input  id='input' type="text">
+  <button onclick="save_bt()">Save</button>
+  <h1>Task</h1>
+  <table id ='task'>
+    
+  
+  </table>
+
+
+  <h1>Comleted</h1>
+  <table id = 'complete'></table>
+
+
+  <script>
+      let task = [];
+      let completed = [];
+
+      function save_bt(){
+    
+        let value_task = document.getElementById('input').value
+        task.push(value_task)
+        localStorage.setItem("newtask", JSON.stringify(task));
+        write_task()
+        
+        document.getElementById('input').value ='';
+        
+      }
+      function load_task(){
+         task = JSON.parse( localStorage.getItem("newtask"));
+         write_task()
+         completed = JSON.parse(localStorage.getItem("newcomplete"));
+         write_complete()
+      }
+      function complete_bt(value){
+        //alert(value)
+        completed.push(task[value])
+        localStorage.setItem("newcomplete",JSON.stringify(completed));
+         task.splice(value,1)
+         localStorage.setItem("newtask", JSON.stringify(task));
+        //alert(task)
+        write_complete()
+        write_task()
+
+
+      }
+      function remove_bt(value){
+        task.splice(value,1)
+        localStorage.setItem("newtask", JSON.stringify(task));
+        write_task()
+
+      }
+      function write_task(){
+        let S ="";
+        for(i=0; i <task.length; i++){
+          S+= "<tr>";
+          S+= "<td> "+(i+1)+"</td>"
+          S+= "<td>"+task[i] + "</td>";
+          S+= "<td><button onclick ='complete_bt(value)' value="+i+">Complete</button></td>"
+          S+= "<td><button onclick ='remove_bt(value)' value="+i+" >Remove</button></td>"
+          S+= "</tr>"
+        }
+        document.getElementById("task").innerHTML = S
+      }
+      function write_complete(){
+        let S ="";
+        for(i=0; i<completed.length; i++){
+          S+= "<tr>";
+          S+= "<td> "+(i+1)+"</td>";
+          S+="<td>"+completed[i] + "</td>";
+          S+= "</tr>"
+        }
+        document.getElementById("complete").innerHTML = S
+      }
+  </script>
+
+
+</body>
+</html>
